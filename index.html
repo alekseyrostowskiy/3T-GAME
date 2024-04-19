@@ -1,0 +1,86 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <script
+    src="https://kit.fontawesome.com/3bfd3ce9e5.js"
+    crossorigin="anonymous"
+  ></script>
+  <title>TickyToey</title>
+</head>
+<body>
+  <main>
+    <div class="top">
+      <div class="exAndOh">
+        <i class="fa-solid fa-x"></i>
+        <i class="fa-solid fa-o"></i>
+      </div>
+
+      <section class="turn">
+        <i class="fa-solid fa-x" id="turn" data-id="turn"></i>
+        <div class="turnColor blue" data-id="turnColor">TURN</div>
+      </section>
+      <div>
+        <button class="clearScore" id="clear-score" data-id="reset">
+          Wipe Score
+        </button>
+      </div>
+    </div>
+
+    <div class="squares" data-id="squares">
+      <ul>
+        <li class="square" data-id="square" id="1"></li>
+        <li class="square" data-id="square" id="2"></li>
+        <li class="square" data-id="square" id="3"></li>
+        <li class="square" data-id="square" id="4"></li>
+        <li class="square" data-id="square" id="5"></li>
+        <li class="square" data-id="square" id="6"></li>
+        <li class="square" data-id="square" id="7"></li>
+        <li class="square" data-id="square" id="8"></li>
+        <li class="square" data-id="square" id="9"></li>
+      </ul>
+    </div>
+
+    <div class="bottom">
+      <ul>
+        <li class="player-one-score">
+          <p>X(Player 1)</p>
+          <span id="player-one-score" data-id="p1Score">0</span>
+        </li>
+        <li class="tie-score">
+          <p>TIES</p>
+          <span id="tie-score" data-id="ties">0</span>
+        </li>
+        <li class="player-two-score">
+          <p>O(Player 2)</p>
+          <span id="player-two-score" data-id="p2Score">0</span>
+        </li>
+      </ul>
+    </div>
+
+    <div
+      class="winner show-winner hidden"
+      id="winner-declaration"
+      data-id="modal"
+    >
+      <div class="text" id="winner-text" data-id="status"></div>
+      <button
+        class="restart-after-win text"
+        id="restart-after-win"
+        data-id="restart"
+      >
+        Play again
+      </button>
+    </div>
+  </main>
+
+  <footer>
+    <p class="twitter">
+      <a target="_blank" href="https://github.com/alekseyrostowskiy"
+        >@alekseyrostowskiy</a
+      >
+    </p>
+  </footer>
+</body>
+<script src="js/app.js" type="module"></script>

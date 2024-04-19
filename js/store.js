@@ -59,7 +59,7 @@ export default class Store {
   }
 
   saveState(stateOrFn) {
-    const prevState = this.game;
+    const prevState = structuredClone(this.#state);
 
     let newState;
 
@@ -77,7 +77,9 @@ export default class Store {
     if (newState.moves.length === 0) {
       this.#state = newState;
     } else {
-      this.#state.moves.push(newState.moves[0]);
+      prevState.moves.push(newState.moves[0]);
+      this.#state = prevState;
+      // this.#state = prevState.moves.push(newState.moves[0]);
     }
   }
 

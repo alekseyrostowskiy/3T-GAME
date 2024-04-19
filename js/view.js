@@ -54,12 +54,11 @@ export default class View {
       this.$.p2Score.innerText = localStorage.getItem("p2Score");
       this.$.modal.classList.remove("hidden");
       this.$.statusText.innerText = `Player  ${winner}
-       is the winner`;
+       won!`;
     }
     if (moves.length === 9) {
       localStorage.setItem("ties", +localStorage.getItem("ties") + 1);
       this.$.ties.innerText = localStorage.getItem("ties");
-
       this.$.modal.classList.remove("hidden");
       this.$.statusText.innerText = `Draw!`;
     }

@@ -20,24 +20,34 @@ function init() {
   const store = new Store(players);
   const view = new View();
 
+  view.handleResetGame(() => {
+    store.reset();
+    view.updateScoreboard(
+      store.stats.playerWithStats[0].wins,
+      store.stats.playerWithStats[1].wins,
+      store.stats.ties
+    );
+    view.wipeScoreboard();
+    view.closeModal();
+    view.setTurnIndicator(players[store.game.currentPlayer - 1], players);
+  });
+
   view.bindPlayerMovement((square) => {
     if (store.hasMove(square)) return;
 
     view.handleSquareIcon(store.game.currentPlayer, square);
 
-    store.saveState({
-      moves: [{ playerId: store.game.currentPlayer, squareId: +square.id }],
-    });
+    store.playerMove(square);
 
+    if (store.game.status.isComplete) {
+      view.openModal(
+        store.game.status.winner
+          ? `${store.game.status.winner.name} wins!`
+          : "Tie!"
+      );
+      return;
+    }
     view.setTurnIndicator(players[store.game.currentPlayer - 1], players);
-
-    view.handleGameStatus(store.game.status, store.game.moves);
-  });
-
-  view.handleResetGame(() => {
-    store.reset();
-    view.wipeScoreboard();
-    view.closeModal();
   });
 }
 

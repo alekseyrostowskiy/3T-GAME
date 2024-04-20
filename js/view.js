@@ -10,11 +10,16 @@ export default class View {
     this.$.modal = this.qs('[data-id="modal"]');
     this.$.statusText = this.qs('[data-id="status"]');
     this.$.restart = this.qs('[data-id="restart"]');
-    this.$.p1Score = this.qs('[data-id="p1Score"]');
-    this.$.p2Score = this.qs('[data-id="p2Score"]');
+    this.$.p1Wins = this.qs('[data-id="p1Wins"]');
+    this.$.p2Wins = this.qs('[data-id="p2Wins"]');
     this.$.ties = this.qs('[data-id="ties"]');
+    this.$.menu = this.qs('[data-id="menu"]');
+    this.$.menuBtn = this.qs('[data-id="menu-btn"]');
 
     //UI-only event
+    this.$.menuBtn.addEventListener("click", () => {
+      this.$.menu.classList.toggle("hidden");
+    });
   }
 
   bindPlayerMovement(handler) {
@@ -45,23 +50,15 @@ export default class View {
     this.$.restart.addEventListener("click", handler);
   }
 
-  handleGameStatus(winner, moves) {
-    if (winner === 1 || winner === 2) {
-      winner === 1
-        ? localStorage.setItem("p1Score", +localStorage.getItem("p1Score") + 1)
-        : localStorage.setItem("p2Score", +localStorage.getItem("p2Score") + 1);
-      this.$.p1Score.innerText = localStorage.getItem("p1Score");
-      this.$.p2Score.innerText = localStorage.getItem("p2Score");
-      this.$.modal.classList.remove("hidden");
-      this.$.statusText.innerText = `Player  ${winner}
-       won!`;
-    }
-    if (moves.length === 9) {
-      localStorage.setItem("ties", +localStorage.getItem("ties") + 1);
-      this.$.ties.innerText = localStorage.getItem("ties");
-      this.$.modal.classList.remove("hidden");
-      this.$.statusText.innerText = `Draw!`;
-    }
+  updateScoreboard(p1Wins, p2Wins, ties) {
+    this.$.p1Wins.innerText = `${p1Wins}`;
+    this.$.p2Wins.innerText = `${p2Wins}`;
+    this.$.ties.innerText = `${ties}`;
+  }
+
+  openModal(status) {
+    this.$.modal.classList.remove("hidden");
+    this.$.statusText.innerText = status;
   }
 
   closeModal() {
@@ -77,7 +74,6 @@ export default class View {
   qs(selector, index = undefined) {
     if (index === "all") {
       const el = document.querySelectorAll(selector);
-      console.log(el);
       if (!el) throw new Error("Could not find elements");
 
       return el;

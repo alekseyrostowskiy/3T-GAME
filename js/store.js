@@ -1,52 +1,87 @@
-const initialStore = { moves: [] };
-const winningPatterns = [
-  [1, 2, 3],
-  [1, 5, 9],
-  [1, 4, 7],
-  [2, 5, 8],
-  [3, 5, 7],
-  [3, 6, 9],
-  [4, 5, 6],
-  [7, 8, 9],
-];
+const initialValue = {
+  moves: [],
+  history: {
+    currentRoundGames: [],
+    allGames: [],
+  },
+};
 
 export default class Store {
-  #state = initialStore;
+  #state = initialValue;
   constructor(players) {
     this.players = players;
-    localStorage.setItem("p1Score", 0);
-    localStorage.setItem("p2Score", 0);
-    localStorage.setItem("ties", 0);
+  }
+
+  get stats() {
+    const state = this.#getState();
+
+    return {
+      playerWithStats: this.players.map((player) => {
+        const wins = state.history.currentRoundGames.filter(
+          (game) => game.status.winner?.id === player.id
+        ).length;
+        return {
+          ...player,
+          wins,
+        };
+      }),
+      ties: state.history.currentRoundGames.filter(
+        (game) => game.status.winner === null
+      ).length,
+    };
   }
 
   get game() {
     let state = this.#getState();
+    let winner = null;
+    const currentPlayer = +this.players[this.#state.moves.length % 2].id;
+    const winningPatterns = [
+      [1, 2, 3],
+      [1, 5, 9],
+      [1, 4, 7],
+      [2, 5, 8],
+      [3, 5, 7],
+      [3, 6, 9],
+      [4, 5, 6],
+      [7, 8, 9],
+    ];
 
-    let winner;
-    const p1Moves = state.moves
-      .filter((e) => e.playerId === 1)
-      .map((e) => e.squareId);
-    const p2Moves = state.moves
-      .filter((e) => e.playerId === 2)
-      .map((e) => e.squareId);
-
-    for (const pattern of winningPatterns) {
-      if (pattern.every((v) => p1Moves.includes(v))) {
-        winner = 1;
-      }
-      if (pattern.every((v) => p2Moves.includes(v))) {
-        winner = 2;
+    for (const player of this.players) {
+      const selectedSquareIds = state.moves
+        .filter((move) => move.playerId === player.id)
+        .map((move) => move.squareId);
+      for (const pattern of winningPatterns) {
+        if (pattern.every((v) => selectedSquareIds.includes(v))) {
+          winner = player;
+        }
       }
     }
-    if (winner) {
-      state = this.#getState(winner);
-    }
 
-    return state;
+    return {
+      moves: state.moves,
+      currentPlayer,
+      status: {
+        isComplete: winner != null || state.moves.length === 9,
+        winner: winner,
+      },
+    };
   }
 
   reset() {
-    this.saveState({ moves: [] });
+    const stateClone = structuredClone(this.#getState());
+
+    const { status, moves } = this.game;
+
+    if (status.isComplete) {
+      stateClone.history.currentRoundGames.push({
+        moves,
+        status,
+      });
+    }
+
+    stateClone.moves = [];
+
+    this.saveState(stateClone);
   }
 
   hasMove(square) {
@@ -56,6 +91,16 @@ export default class Store {
       return 1;
     }
     return 0;
+  }
+
+  playerMove(square) {
+    const stateClone = structuredClone(this.#getState());
+    stateClone.moves.push({
+      playerId: this.game.currentPlayer,
+      squareId: +square.id,
+    });
+
+    this.saveState(stateClone);
   }
 
   saveState(stateOrFn) {
@@ -74,20 +119,10 @@ export default class Store {
         throw new Error("Invalid argument passed to saveState");
     }
 
-    if (newState.moves.length === 0) {
-      this.#state = newState;
-    } else {
-      prevState.moves.push(newState.moves[0]);
-      this.#state = prevState;
-      // this.#state = prevState.moves.push(newState.moves[0]);
-    }
+    this.#state = newState;
   }
 
-  #getState(status = "in process") {
-    return {
-      currentPlayer: +this.players[this.#state.moves.length % 2].id,
-      moves: this.#state.moves,
-      status: status,
-    };
+  #getState() {
+    return this.#state;
   }
 }

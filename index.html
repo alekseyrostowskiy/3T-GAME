@@ -18,13 +18,15 @@
       </div>
 
       <section class="turn">
-        <i class="fa-solid fa-x" id="turn" data-id="turn"></i>
+        <i class="fa-solid fa-x" data-id="turn"></i>
         <div class="turnColor blue" data-id="turnColor">TURN</div>
       </section>
-      <div>
-        <button class="clearScore" id="clear-score" data-id="reset">
-          Wipe Score
-        </button>
+      <div class="menu-btn">
+        <button class="clearScore" data-id="menu-btn">Actions</button>
+        <div class="menu hidden" data-id="menu">
+          <button class="clearScore" data-id="reset">Reset</button>
+          <button class="clearScore" data-id="newRound">New round</button>
+        </div>
       </div>
     </div>
 
@@ -46,15 +48,15 @@
       <ul>
         <li class="player-one-score">
           <p>X(Player 1)</p>
-          <span id="player-one-score" data-id="p1Score">0</span>
+          <span data-id="p1Wins">0</span>
         </li>
         <li class="tie-score">
           <p>TIES</p>
-          <span id="tie-score" data-id="ties">0</span>
+          <span data-id="ties">0</span>
         </li>
         <li class="player-two-score">
           <p>O(Player 2)</p>
-          <span id="player-two-score" data-id="p2Score">0</span>
+          <span id="player-two-score" data-id="p2Wins">0</span>
         </li>
       </ul>
     </div>
@@ -64,12 +66,8 @@
       id="winner-declaration"
       data-id="modal"
     >
-      <div class="text" id="winner-text" data-id="status"></div>
-      <button
-        class="restart-after-win text"
-        id="restart-after-win"
-        data-id="restart"
-      >
+      <div class="text" data-id="status"></div>
+      <button class="restart-after-win text" data-id="restart">
         Play again
       </button>
     </div>
